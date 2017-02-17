@@ -2,29 +2,32 @@ module DataTypes (
   Universe(..), Mass(..), Pos(..), Vel(..), Acc(..), Body(..)
 ) where
 
-type Weight = Double
-type Mass   = Double
+import qualified Graphics.Gloss as G
 
-data Pos = P { px :: Double
-             , py :: Double
-             } deriving (Show, Read, Eq)
+type Weight = Float
+type Mass   = Float
 
-data Vel = V { vx :: Double
-             , vy :: Double
-             } deriving (Show, Read, Eq)
+data Pos = P { px :: Float
+             , py :: Float
+             } deriving (Show, Eq)
 
-data Acc = A { ax :: Double
-             , ay :: Double
-             } deriving (Show, Read, Eq)
+data Vel = V { vx :: Float
+             , vy :: Float
+             } deriving (Show, Eq)
+
+data Acc = A { ax :: Float
+             , ay :: Float
+             } deriving (Show, Eq)
 
 data Body = B { mass :: Mass
              , pos   :: Pos
              , vel   :: Vel
-             } deriving (Show, Read, Eq)
+             , color :: G.Color
+             } deriving (Show, Eq)
 
-data Universe = U { pixelToM     :: Double
-                  , pixelToKg    :: Double
-                  , simTimeRatio :: Double
+data Universe = U { pixelToM     :: Float
+                  , pixelToKg    :: Float
+                  , simTimeRatio :: Float
                   , bodies       :: [Body]
-                  } deriving (Show, Read, Eq)
+                  } deriving (Show, Eq)
 
