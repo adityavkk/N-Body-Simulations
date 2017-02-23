@@ -4,7 +4,6 @@ module DataTypes (
 
 import qualified Graphics.Gloss as G
 
-type Weight = Float
 type Mass   = Float
 
 data Pos = P { px :: Float
