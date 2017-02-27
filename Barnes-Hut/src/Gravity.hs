@@ -9,7 +9,6 @@ type Time = Float
 
 theta = 0.5
 
-
 d :: Pos -> Pos -> Float
 d (P x1 y1) (P x2 y2) = sqrt (dx^2 + dy^2)
   where
@@ -59,4 +58,3 @@ moveUniv t u@(U _ _ t' bs bt) = u { bodies     = bs'
     where dt = t * t'
           bs' = [moveBody (accelBody b dt (force b bt)) dt | b <- bs]
           bt' = makeBarnes 7e12 bs'
-
