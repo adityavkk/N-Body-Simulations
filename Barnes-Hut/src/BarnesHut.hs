@@ -12,7 +12,7 @@ makeBarnes :: Float -> [Body] -> BarnesTree
 makeBarnes w = foldr insert $ mtBarnes w
 
 mtBarnes :: Float -> BarnesTree
-mtBarnes w = Inter (P 0 0) (P 0 0) 0 w (bLeaf (P (-w'') w') w')
+mtBarnes w = Inter (P 0 0) (P 0 0) w 0 (bLeaf (P (-w'') w'') w')
                                        (bLeaf (P w'' w'') w')
                                        (bLeaf (P (-w'') (-w'')) w')
                                        (bLeaf (P w'' (-w'')) w')
@@ -38,17 +38,18 @@ insert b (Inter cMass c w m nw ne sw se) = Inter cMass' c w m' nw' ne' sw' se'
       | inQuad b bt = insert b bt : bts
       | otherwise   = bt : bts
 
-    inQuad :: Body -> BarnesTree -> Bool
-    inQuad _ (Exter _) = True
-    inQuad (B _ (P x y) _ _) bt
-      | x < xmn && x > xmx &&
-        y < ymn && y > ymx   = True
-      | otherwise            = False
-      where xmn = x' - (w / 2)
-            xmx = x' + (w / 2)
-            ymn = y' - (w / 2)
-            ymx = y' + (w / 2)
-            x'  = px $ btCenter bt
-            y'  = py $ btCenter bt
+inQuad :: Body -> BarnesTree -> Bool
+inQuad (B _ (P x y) _ _) bt = case bt of
+                                (Exter (Leaf (P x' y') w))       ->
+                                  inRange x y x' y' w
+                                (Exter (Node _ (P x' y') w _ _)) ->
+                                  inRange x y x' y' w
+                                (Inter _ (P x' y') w _ _ _ _ _)  ->
+                                  inRange x y x' y' w
 
-
+inRange :: (Ord t, Fractional t) => t -> t -> t -> t -> t -> Bool
+inRange x y x' y' w = x > xmn && x < xmx && y >= ymn && y <= ymx
+  where xmn = x' - (w / 2)
+        xmx = x' + (w / 2)
+        ymn = y' - (w / 2)
+        ymx = y' + (w / 2)

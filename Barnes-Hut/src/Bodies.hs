@@ -3,10 +3,10 @@ module Bodies where
 import DataTypes
 import Gravity
 import BarnesHut
-import Data.List
+import Data.List hiding (insert)
 import qualified Graphics.Gloss as G
 
-sun      = B 1.9891e30 (P 0 0) (V 0 0) G.yellow
+sun      = B 1.9891e30 (P (-1) (-1)) (V 0 0) G.yellow
 earthM   = 5.9736e24
 earthD   = 152098232.0e3
 earthV   =  29.78e3
@@ -22,7 +22,7 @@ initVelocities =
 colors = [G.greyN 0.5, G.violet, G.greyN 0.2, G.blue, G.red, G.orange, G.chartreuse, G.azure, G.cyan, G.magenta]
 
 planets = zipWith4 f masses distances initVelocities colors
-  where f m d v c = B m (P d 0) (V 0 v) c
+  where f m d v c = B m (P d 1) (V 0 v) c
 
 solarSystem w = U ((125 * 0.4) / 152098232.0e3) 13.97e27 2000
                 (sun:planets)

@@ -54,6 +54,9 @@ moveBody :: Body -> DT -> Body
 moveBody (B m (P x y) v@(V vx vy) c) dt = B m (P (x + dt * vx) (y + dt * vy)) v c
 
 moveUniv :: Float -> Universe -> Universe
-moveUniv t u@(U _ _ t' bs bt) = let dt = t * t' in
-  u { bodies = [moveBody (accelBody b dt (force b bt)) dt | b <- bs] }
+moveUniv t u@(U _ _ t' bs bt) = u { bodies     = bs'
+                                  , barnesTree = bt'}
+    where dt = t * t'
+          bs' = [moveBody (accelBody b dt (force b bt)) dt | b <- bs]
+          bt' = makeBarnes 7e12 bs'
 
