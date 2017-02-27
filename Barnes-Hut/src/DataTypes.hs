@@ -50,4 +50,14 @@ data BarnesTree = Exter !BarnesLeaf
                         , ne       :: !BarnesTree
                         , sw       :: !BarnesTree
                         , se       :: !BarnesTree
-                        } deriving (Show, Eq)
+                        } deriving (Eq)
+
+instance Show BarnesTree where
+  show (Exter (Leaf (P x y) w)) = "Leaf: " ++ show x ++ " " ++ show y ++ " " ++ show w ++ "\n"
+  show (Exter (Node (P x y) (P x' y') w m (B mb (P xb yb) _ _))) =
+    "Exter Node: " ++ show x ++ " " ++ show y ++ " center: " ++ show x' ++ " " ++ show y' ++
+    " " ++ show w ++ " " ++ show m ++ " " ++ "Body: " ++ show mb ++ " pos: " ++ show (xb, yb) ++ "\n"
+  show (Inter (P cmx cmy) (P cm cy) w m q1 q2 q3 q4) =
+    "Inter Node: ------>" ++ show (cmx, cmy) ++ " center: " ++ show (cm, cy) ++ " w: " ++ show w
+    ++ " m: " ++ show m ++ "\n(Quadrants: ~~> \n" ++ show q1 ++ show q2 ++ show q3 ++ show q4 ++ ")\n"
+
