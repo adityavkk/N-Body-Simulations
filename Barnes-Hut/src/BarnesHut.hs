@@ -1,12 +1,14 @@
 module BarnesHut where
 
+import GHC.Float
 import DataTypes
 
 cm :: Body -> (Mass, Pos) -> Pos
 cm (B m1 (P x1 y1) _ _) (m2, P x2 y2) = P x y
-  where m = m1 + m2
-        x = (x1 * m1 + x2 * m2) / m
-        y = (y1 * m1 + y2 * m2) / m
+  where [m1', x1', y1', m2', x2', y2'] = map float2Double [m1, x1, y1, m2, x2, y2]
+        m = m1' + m2'
+        x = double2Float $ (x1' * m1' + x2' * m2') / m
+        y = double2Float $ (y1' * m1' + y2' * m2') / m
 
 makeBarnes :: Float -> [Body] -> BarnesTree
 makeBarnes w = foldr insert $ mtBarnes w

@@ -7,13 +7,16 @@ import qualified Graphics.Gloss as G
 type DT   = Float
 type Time = Float
 
-theta = 6000
+theta = 0.5
 
 d :: Pos -> Pos -> Float
 d (P x1 y1) (P x2 y2) = sqrt (dx^2 + dy^2)
   where
     dx = x2 - x1
     dy = y2 - y1
+
+sd :: BarnesTree -> Body -> Float
+sd = undefined
 
 force :: Body -> BarnesTree -> Acc
 force b (Exter (Leaf _ _)) = A 0 0
