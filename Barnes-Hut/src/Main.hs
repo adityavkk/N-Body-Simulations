@@ -11,7 +11,7 @@ type PixToMeter = Float
 w   = 1500
 off = 100
 fps = 80 :: Int
-univSize = 7e12 :: Float
+univSize = 20e12 :: Float
 
 window =
   InWindow "N-Body Simulation (Barnes Hut) by Aditya K." (w, w) (off, off)

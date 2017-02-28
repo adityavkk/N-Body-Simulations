@@ -12,10 +12,12 @@ makeBarnes :: Float -> [Body] -> BarnesTree
 makeBarnes w = foldr insert $ mtBarnes w
 
 mtBarnes :: Float -> BarnesTree
-mtBarnes w = Inter (P 0 0) (P 0 0) w 0 (bLeaf (P (-w'') w'') w')
-                                       (bLeaf (P w'' w'') w')
-                                       (bLeaf (P (-w'') (-w'')) w')
-                                       (bLeaf (P w'' (-w'')) w')
+mtBarnes w = interNode (P 0 0) (P 0 0) w 0
+
+interNode cm c@(P x y) w m = Inter cm c w m (bLeaf (P (x - w'') (y + w'')) w')
+                                            (bLeaf (P (x + w'') (y + w'')) w')
+                                            (bLeaf (P (x - w'') (y - w'')) w')
+                                            (bLeaf (P (x + w'') (y - w'')) w')
   where w'  = w / 2
         w'' = w' / 2
 
@@ -24,7 +26,8 @@ bLeaf = (Exter .) . Leaf
 
 insert :: Body -> BarnesTree -> BarnesTree
 insert b (Exter (Leaf c w))              = Exter (Node (pos b) c w (mass b) b)
-insert b1 (Exter (Node cMass c w m b2))  = insert b2 $ insert b1 $ mtBarnes w
+insert b1 (Exter (Node cMass c w m b2))  =
+  insert b1 $ insert b2 $ interNode cMass c w m
 insert b (Inter cMass c w m nw ne sw se) = Inter cMass' c w m' nw' ne' sw' se'
   where
     cMass' = cm b (m, cMass)

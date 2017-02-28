@@ -24,6 +24,10 @@ colors = [G.greyN 0.5, G.violet, G.greyN 0.2, G.blue, G.red, G.orange, G.chartre
 planets = zipWith4 f masses distances initVelocities colors
   where f m d v c = B m (P d 1) (V 0 v) c
 
-solarSystem w = U ((125 * 0.4) / 152098232.0e3) 13.97e27 2000
+solarSystem w = U ((125 * 0.4) / 152098232.0e3) 13.97e27 200
                 (sun:planets)
                 (makeBarnes w (sun:planets))
+
+sunMerc w = U ((125 * 0.4) / 152098232.0e3) 13.97e27 1000
+                (sun:(take 1 $ reverse planets))
+                (makeBarnes w (sun:(take 1 $ reverse planets)))
