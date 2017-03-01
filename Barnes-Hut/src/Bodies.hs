@@ -21,13 +21,36 @@ initVelocities =
     [1.59, 1.18, 1.0343, 1.0, 0.808, 0.439, 0.325, 0.228, 0.182, 0.157]
 colors = [G.greyN 0.5, G.violet, G.greyN 0.2, G.blue, G.red, G.orange, G.chartreuse, G.azure, G.cyan, G.magenta]
 
-planets = zipWith4 f masses distances initVelocities colors
-  where f m d v c = B m (P d 1) (V 0 v) c
+planets = zipWith4 fy masses distances initVelocities colors
 
-solarSystem w = U ((125 * 0.4) / 152098232.0e3) 13.97e27 2000
+fy m d v = B m (P d 1) (V 0 v)
+fx m d v = B m (P 1 d) (V v 0)
+
+solarSystem = U ((125 * 0.4) / 152098232.0e3) 13.97e27 2000
                 (sun:planets)
                 (makeBarnes w (sun:planets))
+  where w = 20e12
 
-sunMerc w = U ((125 * 0.4) / 152098232.0e3) 13.97e27 1000
-                (sun:(take 1 $ reverse planets))
-                (makeBarnes w (sun:(take 1 $ reverse planets)))
+fourBodyStar = U (500 / earthD) 13.97e27 1500 bs (makeBarnes w bs)
+  where masses         = [3.0e28, 3.0e28, 3.0e28, 3.0e28]
+        distances      = [-3.5e10, -1.0e10, 1.0e10, 3.5e10]
+        initVelocities = [1.4e03, 1.4e04, (-1.4e04), (-1.4e03)]
+        colors         = repeat G.violet
+        bs             = zipWith4 fy masses distances initVelocities colors
+        w              = 5.0e10
+
+threeBodyCircle = U (500 / earthD) 13.97e27 1000 bs (makeBarnes w bs)
+  where masses          = [5.97e24, 1.989e30, 1.989e30]
+        distances       = [0.0e00, 4.5e10, (-4.5e10)]
+        initXVelocities = [0.05e04, 3.0e04, (-3.0e04)]
+        colors          = repeat G.violet
+        bs              = zipWith4 fx masses distances initXVelocities colors
+        w               = 1.25e11
+
+binaryStars = U (500 / earthD) 13.97e27 1500 bs (makeBarnes w bs)
+  where masses          = [1.5e30, 1.5e30]
+        distances       = [4.5e10, (-4.5e10)]
+        initXVelocities = [1.0e04, (-1.0e04)]
+        colors          = repeat G.magenta
+        bs              = zipWith4 fx masses distances initXVelocities colors
+        w               = 5.0e10

@@ -11,7 +11,6 @@ type PixToMeter = Float
 w   = 1500
 off = 100
 fps = 80 :: Int
-univSize = 20e12 :: Float
 
 window =
   InWindow "N-Body Simulation (Barnes Hut) by Aditya K." (w, w) (off, off)
@@ -32,4 +31,4 @@ move t u = moveUniv (T.simTimeRatio u * t) u
 update = const move
 
 main :: IO ()
-main = simulate window black fps (solarSystem univSize) render update
+main = simulate window black fps threeBodyCircle render update
