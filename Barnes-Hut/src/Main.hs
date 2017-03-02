@@ -34,8 +34,5 @@ update = const move
 f u = u >>= (\ univ -> return (window, black, fps, univ, render, update))
 
 main :: IO ()
-main = (generate $ f $ crazyU 2000) >>= (\ (w, b, f, u, r, up) -> 
+main = (generate $ f $ crazyU 10) >>= (\ (w, b, f, u, r, up) -> 
   simulate w b f u r up)
-
-{- main :: IO () -}
-{- main = simulate window black fps lotaSystem render update -}

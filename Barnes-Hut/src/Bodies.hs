@@ -26,12 +26,12 @@ rPs :: Int -> Gen [(Float, Float, Float, Float)]
 rPs n = vectorOf n rP
 
 bs n = rPs n >>=
-  (\ ps -> return $ map (\ (m, d, v, y) -> B (earthM * m) (P (earthD * d) (earthD * y)) (V 0 (earthV * v)) G.azure) ps)
+  (\ ps -> return $ map (\ (m, d, v, y) -> B (earthM * m) (P (earthD * d) 1) (V 0 (earthV * v)) G.azure) ps)
 
 crazyU :: Int -> Gen Universe
 crazyU n = bs n >>=
   (\ ps ->
-    return $ U ((125 * 0.4) / 152098232.0e3) 13.97e27 3000 (jupiter:sun:ps) (makeBarnes 20e12 (jupiter:sun:ps)))
+    return $ U ((125 * 0.4) / 152098232.0e3) 13.97e27 2000 (jupiter:sun:ps) (makeBarnes 20e12 (jupiter:sun:ps)))
   where jupiter = planets !! 5
 
 sun      = B 1.9891e30 (P (-1) (-1)) (V 0 0) G.yellow
@@ -40,7 +40,7 @@ earthD   = 152098232.0e3
 earthV   =  29.78e3
 masses =
   map (* earthM)
-    [0.0553, 0.815, 0.0123, 1.0, 0.107, 317000.8, 95.2, 14.5, 17.1, 0.0025]
+    [0.0553, 0.815, 0.0123, 1.0, 0.107, 317.8, 95.2, 14.5, 17.1, 0.0025]
 distances =
   map (* earthD)
     [0.387, 0.723, 1.00257, 1.0, 1.52, 2.20, 9.58, 19.20, 30.05, 39.48]
