@@ -25,8 +25,9 @@ draw :: PixToMeter -> PixToKg -> T.Body -> Picture
 draw pToM pToKg (T.B m (T.P px py) _ c t) = pictures [circle, trail]
   where
     circle   = translate (pToM * px) ( pToM * py ) $ color c $ circleSolid 4
-    trail    = color c $ line trailPts
-    trailPts = foldr (\ (x, y) pts -> (pToM * x, pToM * y) : pts) [] (T.lru t)
+    trail    = pictures $ map (\ (a, b) -> (color c . line) [a, b]) 
+                              (zip (init trailPts) (tail trailPts))
+    trailPts = reverse $ foldr (\ (x, y) pts -> (pToM * x, pToM * y) : pts) [] (T.lru t)
 
 move :: Float -> T.Universe -> T.Universe
 move t u = moveUniv (T.simTimeRatio u * t) u
