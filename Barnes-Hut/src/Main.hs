@@ -22,8 +22,11 @@ render u = pictures $ draw pToM pToKg <$> bs
         pToKg = T.pixelToKg u
 
 draw :: PixToMeter -> PixToKg -> T.Body -> Picture
-draw pToM pToKg (T.B m (T.P px py) _ c) =
-  translate (pToM * px) ( pToM * py ) $ color c $ circleSolid 4
+draw pToM pToKg (T.B m (T.P px py) _ c t) = pictures [circle, trail]
+  where
+    circle   = translate (pToM * px) ( pToM * py ) $ color c $ circleSolid 4
+    trail    = color c $ line trailPts
+    trailPts = foldr (\ (x, y) pts -> (pToM * x, pToM * y) : pts) [] (T.lru t)
 
 move :: Float -> T.Universe -> T.Universe
 move t u = moveUniv (T.simTimeRatio u * t) u
@@ -31,4 +34,4 @@ move t u = moveUniv (T.simTimeRatio u * t) u
 update = const move
 
 main :: IO ()
-main = simulate window black fps threeBodyCircle render update
+main = simulate window black fps fourBodyStar render update
