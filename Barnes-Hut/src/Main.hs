@@ -34,9 +34,7 @@ move t u = moveUniv (T.simTimeRatio u * t) u
 update = const move
 
 handleKeys (EventKey (Char 't') Down _ _) u = u { T.trails = not $ T.trails u }
-handleKeys _ u = u
-
-{- main = simulate window black fps fourBodyStar render update -}
+handleKeys _ u                              = u
 
 main :: IO ()
 main = play window black fps fourBodyStar render handleKeys move

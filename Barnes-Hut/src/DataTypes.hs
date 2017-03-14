@@ -3,7 +3,6 @@
 module DataTypes where
 
 import qualified Graphics.Gloss as G
-import Data.LruCache
 
 type Mass   = Float
 
@@ -54,20 +53,6 @@ data BarnesTree = Exter !BarnesLeaf
                         , sw       :: !BarnesTree
                         , se       :: !BarnesTree
                         } deriving (Eq)
-
-data DebouncedLRU k v = DLRU { debounce :: Int
-                             , count    :: Int
-                             , lru      :: LruCache k v
-                             } deriving (Show, Eq)
-
-debouncedInsert :: Float -> (Float, Float) -> DebouncedLRU Float (Float, Float) -> DebouncedLRU Float (Float, Float)
-debouncedInsert k v (DLRU d c cache)
-  | c < d     = DLRU d (c + 1) cache
-  | otherwise = DLRU d 0 (insert k v cache)
-
-debouncedMt d s = DLRU d 0 (empty s)
-
-forceInsert k v dlru = dlru { lru = insert k v (lru dlru) }
 
 instance Show BarnesTree where
   show (Exter (Leaf (P x y) w)) = "Leaf: " ++ show x ++ " " ++ show y ++ " " ++ show w ++ "\n"

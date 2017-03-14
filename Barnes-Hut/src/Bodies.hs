@@ -5,7 +5,6 @@ import Gravity
 import BarnesHut hiding (insert)
 import Data.List hiding (insert)
 import qualified Graphics.Gloss as G
-import Data.LruCache
 
 mtLRU    = debouncedMt 10 5000
 sun      = B 1.9891e30 (P (-1) (-1)) (V 0 0) G.yellow []

@@ -22,7 +22,6 @@ library
                        BarnesHut
   build-depends:       base >= 4.7 && < 5 
                      , gloss==1.10.*
-                     , lrucaching
   ghc-options:        -fwarn-unused-imports
                       -fwarn-tabs
                       -fwarn-missing-signatures
@@ -35,7 +34,6 @@ executable Barnes-Hut-Exe
   build-depends:       Barnes-Hut
                      , base >= 4.7 && < 5 
                      , gloss==1.10.*
-                     , lrucaching
   ghc-options:        -fwarn-unused-imports
                       -fwarn-tabs
                       -fwarn-missing-signatures
