@@ -6,7 +6,6 @@ import BarnesHut hiding (insert)
 import Data.List hiding (insert)
 import qualified Graphics.Gloss as G
 
-mtLRU    = debouncedMt 10 5000
 sun      = B 1.9891e30 (P (-1) (-1)) (V 0 0) G.yellow []
 earthM   = 5.9736e24
 earthD   = 152098232.0e3

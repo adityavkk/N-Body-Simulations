@@ -3,7 +3,6 @@ module Gravity where
 import DataTypes
 import BarnesHut hiding (insert)
 import qualified Graphics.Gloss as G
-import Data.LruCache
 
 type DT   = Float
 type Time = Float
