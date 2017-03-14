@@ -23,7 +23,7 @@ data Body = B { mass  :: !Mass
               , pos   :: !Pos
               , vel   :: !Vel
               , color :: !G.Color
-              , trail :: DebouncedLRU Float (Float, Float)
+              , trail :: [(Float, Float)]
               } deriving (Show, Eq)
 
 data Universe = U { pixelToM     :: Float
@@ -31,6 +31,7 @@ data Universe = U { pixelToM     :: Float
                   , simTimeRatio :: !Float
                   , bodies       :: ![Body]
                   , barnesTree   :: !BarnesTree
+                  , trails       :: !Bool
                   } deriving (Show, Eq)
 
 data BarnesLeaf = Leaf { blCenter :: !Pos
