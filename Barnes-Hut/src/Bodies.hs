@@ -31,7 +31,7 @@ bs n = rPs n >>=
 crazyU :: Int -> Gen Universe
 crazyU n = bs n >>=
   (\ ps ->
-    return $ U ((125 * 0.4) / 152098232.0e3) 13.97e27 2000 (jupiter:sun:ps) (makeBarnes 20e12 (jupiter:sun:ps)))
+    return $ U ((125 * 0.1) / 152098232.0e3) 13.97e27 2000 (jupiter:sun:ps) (makeBarnes 20e12 (jupiter:sun:ps)))
   where jupiter = planets !! 5
 
 sun      = B 1.9891e30 (P (-1) (-1)) (V 0 0) G.yellow
