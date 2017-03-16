@@ -13,8 +13,7 @@ particle is calculated by taking every other particle into account)
 
 Binary Star System | Three Body System
 ------------ | -------------
-![Binary Star System](images/binaryStars.gif) | ![Three Body
-System](images/threeBodyCircleResized.gif)
+![Binary Star System](images/binaryStars.gif) | ![Three Body System](images/threeBodyCircleResized.gif)
 
 ## Barnes-Hut Simulation
 The Barnes-Hut Simulation is an efficient, N-body simulation algorithm
@@ -60,13 +59,11 @@ data BarnesLeaf = Leaf { blCenter :: !Pos
 ```
 We begin by sub-dividing our space into quadrants and inserting our
 bodies into the Barnes Tree.
-
 ```haskell
 insert :: Body -> BarnesTree -> BarnesTree
 ```
 There are 3 distinct cases that our insert function has to address:
 - _Case 1:_ Inserting a body into an External Leaf node with no bodies
-
     ```haskell
     insert b (Exter (Leaf c w)) = Exter (Node (pos b) c w (mass b) b)
     ```
@@ -74,7 +71,6 @@ There are 3 distinct cases that our insert function has to address:
             To do this, we replace the External node with an Internal
             node, update its attributes and recursively insert the body
             into it
-
     ```haskell
     insert b1 (Exter (Node cMass c w m b2)) = insert b1 $ insert b2 $ interNode cMass c w m
     ```
@@ -83,7 +79,6 @@ There are 3 distinct cases that our insert function has to address:
             of mass, total mass etc._, find which quadrant the body
             belongs in and recursively insert the body into one of the
             appropriate quadrants: `nw', ne', sw', se'`
-
     ```haskell
     insert b (Inter cMass c w m nw ne sw se) = Inter cMass' c w m' nw' ne' sw' se'
     ```
@@ -91,20 +86,17 @@ Now that our space and the bodies in it have effectively been inserted
 into the Barnes Tree, we can utilize its structure to efficiently
 approximate, upto arbitrary precision, the force each particle experiences due
 to all the other particles.
-
 ```haskell
 force :: Body -> BarnesTree -> Acc
 ```
 There are 3 distinct cases the force calculations has to take into
 account:
-
 - _Case 1:_ If the BarnesTree is an external node without a body in it, it
 exerts no force
 
     ```haskell
     force b (Exter (Leaf _ _)) = A 0 0
     ```
-
 - _Case 2:_ If the BarnesTree is an external node with a body in it, 
           we calculated the force exerted by it like we would any other particle
 
@@ -115,7 +107,6 @@ exerts no force
       where
         b' = body n
     ```
-
 - _Case 3:_ If the BarnesTree is an internal node and its (width /
     distance to particle from center of mass) is less than a
     configurable quantity, `theta` (usually set to `0.5`), then we can
