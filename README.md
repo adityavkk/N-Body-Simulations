@@ -9,7 +9,7 @@ particle is calculated by taking every other particle into account)
 --
 
 ### Some 2D Simulations run with the Barnes-Hut Simulation
-![Solar System](https://www.dropbox.com/pri/get/solarSystem.gif?_subject_uid=11897904&raw=1&size=2048x1536&size_mode=3&w=AACYVNWpmNFD-iz3Dr2xpPD0EsWQpus0jIxFJeQyT9GXog)
+![Solar System](N-Body-Simulations/images/solarSystem.gif)
 
 Binary Star System | Three Body System
 ------------ | -------------
