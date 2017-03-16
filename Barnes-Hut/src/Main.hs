@@ -34,22 +34,26 @@ move :: Float -> T.Rendering -> T.Rendering
 move t r
   | zoomOut   = r { T.universe = moveU { T.pixelToM = T.pixelToM moveU * 0.99 }}
   | zoomIn    = r { T.universe = moveU { T.pixelToM = T.pixelToM moveU * 1.01 }}
+  | paused    = r
   | otherwise = r { T.universe = moveU }
   where u       = T.universe r
         zoomOut = T.zOut r
         zoomIn  = T.zIn r
         moveU   = moveUniv (T.simTimeRatio u * t) u
+        paused  = T.paused r
 
 update :: b -> Float -> T.Rendering -> T.Rendering
 update = const move
 
 initState :: T.Rendering
-initState = T.Render fourBodyStar False False
+initState = T.Render fourBodySystem False False False
 
 handleKeys :: Event -> T.Rendering -> T.Rendering
 handleKeys (EventKey (Char 't') Down _ _) r =
   r { T.universe = u { T.trails = not $ T.trails u } }
     where u = T.universe r
+handleKeys (EventKey (Char 'p') Down _ _) r =
+  r { T.paused = not $ T.paused r }
 handleKeys (EventKey (Char '=') s _ _) r
   | s == Down = r { T.zIn = True }
   | otherwise = r { T.zIn = False }

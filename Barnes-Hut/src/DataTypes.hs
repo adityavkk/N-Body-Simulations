@@ -34,8 +34,9 @@ data Universe = U { pixelToM     :: Float
                   } deriving (Show, Eq)
 
 data Rendering = Render { universe :: Universe
-                        , zOut     :: Bool
-                        , zIn      :: Bool
+                        , zOut     :: !Bool
+                        , zIn      :: !Bool
+                        , paused   :: !Bool
                         } deriving (Show)
 
 data BarnesLeaf = Leaf { blCenter :: !Pos
