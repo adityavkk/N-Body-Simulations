@@ -6,14 +6,15 @@ by gravity written in Haskell
 particle is calculated by taking every other particle into account)
 * __Barnes-Hut Simulation__ (A O(log n)) algorithm based on quad/oct trees currently capable of simulating over 50,000 bodies)
 
---
+---
 
 ### Some 2D Simulations run with the Barnes-Hut Simulation
 ![Solar System](images/solarSystem.gif)
 
 Binary Star System | Three Body System
 ------------ | -------------
-![Solar System](https://www.dropbox.com/pri/get/binaryStars.gif?_subject_uid=11897904&raw=1&size=2048x1536&size_mode=3&w=AACwtcoqQ1ivESPfhabwX3c6uCk9inzsYCAoaSyGtcG3rw) | ![Three Body System](https://www.dropbox.com/pri/get/threeBodyCircleResized.gif?_subject_uid=11897904&raw=1&size=2048x1536&size_mode=3&w=AAATds7DmeguZ1AMgKu5Fo9ujqP-TGkX4iJRiM8dVrpgmw)
+![Binary Star System](images/binaryStars.gif) | ![Three Body
+System](images/threeBodyCircleResized.gif)
 
 ## Barnes-Hut Simulation
 The Barnes-Hut Simulation is an efficient, N-body simulation algorithm
