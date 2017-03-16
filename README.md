@@ -4,7 +4,7 @@ by gravity written in Haskell
 
 * __Direct Simulation__ (A O(n^2) algorithm where the force on each
 particle is calculated by taking every other particle into account)
-* __Barnes-Hut Simulation__ (A O(log n)) algorithm based on quad/oct trees currently capable of simulating over 50,000 bodies)
+* __Barnes-Hut Simulation__ (A O(n log n)) algorithm based on quad/oct trees currently capable of simulating over 50,000 bodies)
 
 ---
 
@@ -134,3 +134,4 @@ Kuzmin Models to simulate galaxy collisions
 - [ ] Expanded GUI for selecting initial conditions, changing constants,
 adding bodies etc.
 - [ ] Add collision handling
+- [ ] Add comprehensive test suite
