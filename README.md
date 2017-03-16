@@ -8,7 +8,7 @@ particle is calculated by taking every other particle into account)
 
 ---
 
-### Some 2D Models simulated with Barnes-Hut
+### Some 2D models simulated with Barnes-Hut
 ![Solar System](images/solarSystem.gif)
 
 Binary Star System | Three Body System
@@ -20,7 +20,7 @@ Barnes-Hut is an efficient, N-body simulation algorithm
 that allows us to calculate the force on a particular body in O(log n)
 time as opposed to the O(n), direct-sum algorithm.
 
-It relies on recursively dividing up our space octants in 3 
+It relies on recursively dividing up our space into octants in 3 
 dimensions or quadrants in 2 dimensions. We keep dividing quadrants into
 further quadrants until each particle occupies it's own quadrant. All
 the while maintaining invariant attributes about each partition like center 
@@ -89,7 +89,7 @@ to all the other particles.
 ```haskell
 force :: Body -> BarnesTree -> Acc
 ```
-There are 3 distinct cases the force calculations has to take into
+There are 3 distinct cases the force calculations have to take into
 account:
 - _Case 1:_ If the BarnesTree is an external node without a body in it, it
 exerts no force
@@ -98,7 +98,7 @@ exerts no force
     force b (Exter (Leaf _ _)) = A 0 0
     ```
 - _Case 2:_ If the BarnesTree is an external node with a body in it, 
-          we calculated the force exerted by it like we would any other particle
+          we calculate the force exerted by the body in it
 
     ```haskell
     force b (Exter n)
