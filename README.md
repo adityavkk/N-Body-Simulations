@@ -26,7 +26,7 @@ further quadrants until each particle occupies it's own quadrant. All
 the while maintaining invariant attributes about each partition like center 
 of mass, total mass and position.
 
-Partitioning the space | Recursive partioning
+Partitioning the space | Recursive partitioning
 ---------------------- | --------------
 ![Partitioning of the space into quadrants](https://upload.wikimedia.org/wikipedia/commons/0/03/Barnes_hut_used_nodes.png) Image By Eclipse.sx from wikimedia | ![Further dividing the space](https://upload.wikimedia.org/wikipedia/commons/f/f8/Barnes_hut_tree.png) Image by Eclipse.sx from wikimedia
 
