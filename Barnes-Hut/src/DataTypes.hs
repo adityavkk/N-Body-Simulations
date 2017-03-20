@@ -5,6 +5,7 @@ module DataTypes where
 import qualified Graphics.Gloss as G
 
 type Mass   = Float
+type Radius = Float
 
 data Pos = P { px :: !Float
              , py :: !Float

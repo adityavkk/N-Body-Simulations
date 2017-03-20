@@ -23,6 +23,7 @@ library
   build-depends:       base >= 4.7 && < 5 
                      , gloss==1.10.*
                      , QuickCheck
+                     , numeric-tools
   ghc-options:        -fwarn-unused-imports
                       -fwarn-tabs
                       -fwarn-missing-signatures
@@ -36,6 +37,7 @@ executable Barnes-Hut-Exe
                      , base >= 4.7 && < 5 
                      , gloss==1.10.*
                      , QuickCheck
+                     , numeric-tools
   ghc-options:        -fwarn-unused-imports
                       -fwarn-tabs
                       -fwarn-missing-signatures
