@@ -14,7 +14,7 @@ off = 100
 fps = 80 :: Int
 
 initState :: T.Rendering
-initState = T.Render fourBodyStar False False False
+initState = T.Render fourBodyStar False False False False False
 
 handleKeys :: Event -> T.Rendering -> T.Rendering
 handleKeys (EventKey (Char 't') Down _ _) r =
@@ -28,6 +28,12 @@ handleKeys (EventKey (Char '=') s _ _) r
 handleKeys (EventKey (Char '-') s _ _) r
   | s == Down = r { T.zOut = True }
   | otherwise = r { T.zOut = False }
+handleKeys (EventKey (Char 'f') s _ _) r
+  | s == Down = r { T.fast = True  }
+  | otherwise = r { T.fast = False }
+handleKeys (EventKey (Char 's') s _ _) r
+  | s == Down = r { T.slow = True  }
+  | otherwise = r { T.slow = False }
 handleKeys _ r                              = r
 
 render :: T.Rendering -> Picture
@@ -53,6 +59,10 @@ move t r
     r { T.universe = u { T.pixelToM = T.pixelToM u * 0.99 }}
   | zoomIn                =
     r { T.universe = u { T.pixelToM = T.pixelToM u * 1.01 }}
+  | fst && not paused     =
+    r { T.universe = moveU { T.simTimeRatio = T.simTimeRatio moveU * 1.005 }}
+  | slw && not paused     =
+    r { T.universe = moveU { T.simTimeRatio = T.simTimeRatio moveU * 0.995 }}
   | paused                = r
   | otherwise             = r { T.universe = moveU }
   where u       = T.universe r
@@ -60,6 +70,8 @@ move t r
         zoomIn  = T.zIn r
         moveU   = moveUniv (T.simTimeRatio u * t) u
         paused  = T.paused r
+        fst      = T.fast r
+        slw      = T.slow r
 
 update :: b -> Float -> T.Rendering -> T.Rendering
 update = const move

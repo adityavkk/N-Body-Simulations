@@ -37,6 +37,8 @@ data Rendering = Render { universe :: Universe
                         , zOut     :: !Bool
                         , zIn      :: !Bool
                         , paused   :: !Bool
+                        , fast     :: !Bool
+                        , slow     :: !Bool
                         } deriving (Show)
 
 data BarnesLeaf = Leaf { blCenter :: !Pos
