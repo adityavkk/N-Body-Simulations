@@ -7,15 +7,14 @@ import Numeric.Tools.Integration
 import Numeric.Tools.Differentiation
 import GHC.Float
 
-plummerRho :: Mass -> Radius -> Float -> Float
+plummerRho :: Mass -> Radius -> Radius -> Float
 plummerRho m a r = ((3 * m) / (4 * pi)) * (a^2 / (a^2 + r^2) ** (5/2))
 
-hernquistRho :: Mass -> Radius -> Float -> Float
+hernquistRho :: Mass -> Radius -> Radius -> Float
 hernquistRho m a r = (m / (2 * pi)) * (a / (r * (a + r)^3))
 
-plummerPDF :: Mass -> Radius -> Pos -> Float
-plummerPDF m a p = m * (r^3 / (r^2 + a^2) ** (3/2))
-  where r = d (P 0 0) p
+plummerPDF :: Mass -> Radius -> Radius -> Float
+plummerPDF m a r = m * (r^3 / (r^2 + a^2) ** (3/2))
 
 pdf ::
   (Mass -> Radius -> Float -> Float)
@@ -32,7 +31,7 @@ pdf rho m r d = double2Float $ quadBestEst $ quadRomberg defQuad (0, d') rho'
 
 vonNeumannSampling ::
   Int
-  -> (Mass -> Radius -> Pos -> Float)
+  -> (Mass -> Radius -> Radius -> Float)
   -> Mass -> Radius
   -> [Pos]
   -> Gen [Pos]
@@ -44,11 +43,11 @@ vonNeumannSampling n pdf m rad ps
     let r = r0 * rad
         p = p0 * m
     p' <- randPos r
-    if check r p p'
+    if check r p
     then vonNeumannSampling (n - 1) pdf m rad (p':ps)
     else vonNeumannSampling n pdf m rad ps
   where
-    check r p p' = pdf m rad p' <= p
+    check r p = pdf m rad r <= p
 
 randPos :: Float -> Gen Pos
 randPos r = do
