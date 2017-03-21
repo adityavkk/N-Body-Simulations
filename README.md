@@ -1,10 +1,14 @@
 # N-Body Simulations
 Algorithms and visualizations of dynamical systems of bodies influenced
-by gravity written in Haskell
+by gravity with realistic galaxy interaction models written in Haskell.
 
-* __Direct Simulation__ (A O(n^2) algorithm where the force on each
+* __Direct Simulation__ (O(n^2) algorithm where the force on each
 particle is calculated by taking every other particle into account)
-* __Barnes-Hut Simulation__ (A O(n log n)) algorithm based on quad/oct trees currently capable of simulating over 50,000 bodies)
+* __Barnes-Hut Simulation__ (O(n log n)) algorithm based on quad/oct trees currently capable of simulating over 50,000 bodies)
+* __Galaxy Interaction Models__ based on Monte-Carlo samplings of
+    the Plummer, Hemquist, and Kuzmin models. This enables us to
+    generate realistic initial conditions for spherical and disk
+    galaxies to model interactions and collisions between them.
 
 ---
 
