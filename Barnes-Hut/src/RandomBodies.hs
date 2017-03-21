@@ -5,6 +5,7 @@ import DataTypes
 import Utils
 import Numeric.Tools.Integration
 import Numeric.Tools.Differentiation
+import GHC.Float
 
 plummerRho :: Mass -> Radius -> Float -> Float
 plummerRho m a r = ((3 * m) / (4 * pi)) * (a^2 / (a^2 + r^2) ** (5/2))
@@ -17,16 +18,17 @@ plummerPDF m a p = m * (r^3 / (r^2 + a^2) ** (3/2))
   where r = d (P 0 0) p
 
 pdf ::
-  Radius
-  -> (Mass -> Radius -> Pos -> Float)
+  (Mass -> Radius -> Float -> Float)
   -> Mass
   -> Radius
-  -> Pos
+  -> Radius
   -> Float
-  -> Float
-pdf d rho m r p = quadBestEst $ quadRomberg defQuad (0, d) rho'
+pdf rho m r d = double2Float $ quadBestEst $ quadRomberg defQuad (0, d') rho'
   where rho' :: Double -> Double
-        rho' x = rho m r 
+        rho' x = float2Double $ 4 * pi * x'^2 * rho m r x'
+          where x' = double2Float x
+
+        d'     = float2Double d
 
 vonNeumannSampling ::
   Int
@@ -47,8 +49,10 @@ vonNeumannSampling n pdf m rad ps
     else vonNeumannSampling n pdf m rad ps
   where
     check r p p' = pdf m rad p' <= p
-    randPos r = do
-      x <- choose (0, r)
-      return (P x (sqrt (r^2 - x^2)))
+
+randPos :: Float -> Gen Pos
+randPos r = do
+  x <- choose (0, r)
+  return (P x (sqrt (r^2 - x^2)))
 
 f = generate $ vonNeumannSampling 5 plummerPDF 1 1 []
