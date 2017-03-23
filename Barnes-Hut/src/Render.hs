@@ -6,6 +6,7 @@ import Graphics.Gloss.Interface.Pure.Game
 import Gravity
 import Bodies
 import Data.Maybe
+import Test.QuickCheck
 
 type PixToKg = Float
 type PixToMeter = Float
@@ -17,33 +18,6 @@ fps = 80 :: Int
 initState :: T.Universe -> T.Rendering
 initState u = T.Render u False False False False False
 
-handleKeys :: Event -> T.Rendering -> T.Rendering
-handleKeys (EventKey (Char 't') Down _ _) r =
-  r { T.universe = u { T.trails = not $ T.trails u } }
-    where u = T.universe r
-handleKeys (EventKey (Char 'p') Down _ _) r =
-  r { T.paused = not $ T.paused r }
-handleKeys (EventKey (Char '=') s _ _) r
-  | s == Down = r { T.zIn = True }
-  | otherwise = r { T.zIn = False }
-handleKeys (EventKey (Char '-') s _ _) r
-  | s == Down = r { T.zOut = True }
-  | otherwise = r { T.zOut = False }
-handleKeys (EventKey (Char 'f') s _ _) r
-  | s == Down = r { T.fast = True  }
-  | otherwise = r { T.fast = False }
-handleKeys (EventKey (Char 's') s _ _) r
-  | s == Down = r { T.slow = True  }
-  | otherwise = r { T.slow = False }
-handleKeys (EventKey (Char '1') Down _ _) r =
-  r { T.universe = binaryStars }
-handleKeys (EventKey (Char '2') Down _ _) r =
-  r { T.universe = threeBodyCircle }
-handleKeys (EventKey (Char '3') Down _ _) r =
-  r { T.universe = fourBodyStar }
-handleKeys (EventKey (Char '4') Down _ _) r =
-  r { T.universe = solarSystem }
-handleKeys _ r                              = r
 
 render :: T.Rendering -> Picture
 render r = pictures $ draw u pToM pToKg <$> bs
@@ -56,7 +30,7 @@ draw :: T.Universe -> PixToMeter -> PixToKg -> T.Body -> Picture
 draw u pToM pToKg (T.B m (T.P px py) _ c s t) = pictures [circle, trail]
   where
     circle   = if isNothing s
-               then translate (pToM * px) ( pToM * py ) $ color c $ circleSolid 10
+               then translate (pToM * px) ( pToM * py ) $ color c $ circleSolid 7
                else translate (pToM * px) ( pToM * py ) $ color c $ circleSolid (pToKg * fromJust s)
     trail    = color c $ line [(pToM * x, pToM * y) | (x, y) <- t]
 
@@ -73,8 +47,7 @@ move t r
   | fst && not paused     =
     r { T.universe = moveU { T.simTimeRatio = T.simTimeRatio moveU * 1.005 }}
   | slw && not paused     =
-    r { T.universe = moveU { T.simTimeRatio = T.simTimeRatio moveU * 0.995 }}
-  | paused                = r
+    r { T.universe = moveU { T.simTimeRatio = T.simTimeRatio moveU * 0.995 }} | paused                = r
   | otherwise             = r { T.universe = moveU }
   where u       = T.universe r
         zoomOut = T.zOut r
@@ -92,4 +65,35 @@ window =
   InWindow "N-Body Simulation (Barnes Hut) by Aditya K." (w, w) (off, off)
 
 simulate :: IO ()
-simulate = play window black fps (initState binaryStars) render handleKeys move
+simulate = do
+  rendering <- generate (initState <$> crazyU 3750)
+  let
+      handleKeys (EventKey (Char 't') Down _ _) r =
+        r { T.universe = u { T.trails = not $ T.trails u } }
+          where u = T.universe r
+      handleKeys (EventKey (Char 'p') Down _ _) r =
+        r { T.paused = not $ T.paused r }
+      handleKeys (EventKey (Char '=') s _ _) r
+        | s == Down = r { T.zIn = True }
+        | otherwise = r { T.zIn = False }
+      handleKeys (EventKey (Char '-') s _ _) r
+        | s == Down = r { T.zOut = True }
+        | otherwise = r { T.zOut = False }
+      handleKeys (EventKey (Char 'f') s _ _) r
+        | s == Down = r { T.fast = True  }
+        | otherwise = r { T.fast = False }
+      handleKeys (EventKey (Char 's') s _ _) r
+        | s == Down = r { T.slow = True  }
+        | otherwise = r { T.slow = False }
+      handleKeys (EventKey (Char '1') Down _ _) r =
+        r { T.universe = binaryStars }
+      handleKeys (EventKey (Char '2') Down _ _) r =
+        r { T.universe = threeBodyCircle }
+      handleKeys (EventKey (Char '3') Down _ _) r =
+        r { T.universe = fourBodyStar }
+      handleKeys (EventKey (Char '4') Down _ _) r =
+        r { T.universe = solarSystem }
+      handleKeys (EventKey (Char '5') Down _ _) r =
+        r { T.universe = T.universe rendering }
+      handleKeys _ r                              = r
+  play window black fps (initState binaryStars) render handleKeys move

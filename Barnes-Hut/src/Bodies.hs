@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleContexts #-}
 module Bodies where
 
 import DataTypes
@@ -5,11 +6,53 @@ import Gravity
 import BarnesHut hiding (insert)
 import Data.List hiding (insert)
 import qualified Graphics.Gloss as G
+import Test.QuickCheck
 
 sun      = B 1.9891e30 (P (-1) (-1)) (V 0 0) G.yellow Nothing []
 earthM   = 5.9736e24
 earthD   = 152098232.0e3
 earthV   =  29.78e3
+sun'       = B 3.9891e33 (P (-1) (-1)) (V 0 0) (G.dark G.yellow) (Just 2) []
+
+massGen = choose (0.002, 350)
+distGen = choose (-100, 100)
+
+genDistVel :: Gen (Float, Float)
+genDistVel = distGen >>= f
+  where f n = return (n, (1 / (sqrt $ abs n)) * 3 :: Float)
+
+rP :: Gen (Float, Float, Float, Float, Float, Float)
+rP = do
+  (dx, vx) <- genDistVel
+  (dy, vy) <- genDistVel
+  flipx <- oneof [return 1, return (-1)]
+  flipy <- oneof [return 1, return (-1)]
+  mass <- massGen
+  d' <- distGen
+  return (mass, dx, dy, vx * flipx, vy * flipy, d')
+
+rPs :: Int -> Gen [(Float, Float, Float, Float, Float, Float)]
+rPs n = vectorOf n rP
+
+bs n = rPs n >>=
+  (\ ps -> return $ map (\ (m, dx, dy, vx, vy, y) -> B (earthM * m)
+                                                    (P (earthD * dx) (earthD * dy))
+                                                    (V (earthV * vx) (earthV * vy))
+                                                    G.azure
+                                                    (Just 1)
+                                                    []) ps)
+
+crazyU :: Int -> Gen Universe
+crazyU n = bs n >>=
+  (\ ps ->
+    return $ U ((125 * 0.1) / 152098232.0e3)
+                1
+                2000
+                (sun':ps)
+                (makeBarnes 20e12 (sun':ps))
+                False)
+  where jupiter = planets !! 5
+
 masses =
   map (* earthM)
     [0.0553, 0.815, 0.0123, 1.0, 0.107, 317.8, 95.2, 14.5, 17.1, 0.0025, 3.6832412e-11]
@@ -33,7 +76,20 @@ solarSystem = U ((125 * 0.4) / 152098232.0e3) 1 2000
                 False
   where w = 20e12
 
-fourBodyStar = U (500 / earthD) 2.66e-28 1500 bs (makeBarnes w bs) False
+
+doublePs n ps = foldr
+  (\ p@(B m (P x y) (V vx vy) _ _ _) ps -> p {pos = P (x / n) y } : p : ps)
+                 [] ps
+
+lotaPlanets n = last $ take n $ iterate (doublePs 2) planets
+
+lotaSystem = U ((125 * 0.4) / 152098232.0e3) 13.97e27 2000
+                (sun:lop)
+                (makeBarnes w (sun:lop))
+  where w = 20e12
+        lop = lotaPlanets 10
+
+fourBodyStar = U (500 / earthD) 1.66e-28 1500 bs (makeBarnes w bs) False
   where masses         = [3.0e28, 3.0e28, 3.0e28, 3.0e28]
         distances      = [-3.5e10, -1.0e10, 1.0e10, 3.5e10]
         initVelocities = [1.4e03, 1.4e04, (-1.4e04), (-1.4e03)]
@@ -53,7 +109,7 @@ threeBodyCircle = U (500 / earthD) 1.17e-24 1000 bs' (makeBarnes w bs') False
                 e  = bs !! 0
         w               = 1.25e11
 
-binaryStars = U (500 / earthD) 5.33e-30 2000 bs (makeBarnes w bs) False
+binaryStars = U (500 / earthD) 4.33e-30 2000 bs (makeBarnes w bs) False
   where masses          = [1.5e30, 1.5e30]
         distances       = [4.5e10, (-4.5e10)]
         initXVelocities = [1.0e04, (-1.0e04)]
