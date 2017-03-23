@@ -41,7 +41,7 @@ render r = pictures $ draw u pToM pToKg <$> bs
 draw :: T.Universe -> PixToMeter -> PixToKg -> T.Body -> Picture
 draw u pToM pToKg (T.B m (T.P px py) _ c t) = pictures [circle, trail]
   where
-    circle   = translate (pToM * px) ( pToM * py ) $ color c $ circleSolid 4
+    circle   = translate (pToM * px) ( pToM * py ) $ color c $ circleSolid 2
     trail    = color c $ line [(pToM * x, pToM * y) | (x, y) <- t]
 
 move :: Float -> T.Rendering -> T.Rendering
@@ -71,5 +71,5 @@ window =
 
 simulate :: IO ()
 simulate = do
-  rendering <- generate (initState <$> crazyU 30)
+  rendering <- generate (initState <$> crazyU 500)
   play window black fps rendering render handleKeys move

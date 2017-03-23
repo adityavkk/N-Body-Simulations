@@ -8,27 +8,28 @@ import Data.List hiding (insert)
 import qualified Graphics.Gloss as G
 import Test.QuickCheck
 
-massGen = oneof [choose (0, 2), choose (2, 4), choose (50, 100)]  :: Gen Float
+massGen = oneof [choose (200, 500), choose (90, 200), choose (200, 900)]  :: Gen Float
 distGen = oneof [choose (-1, 0), choose (-10, -1), choose (-40, -20),choose (0, 1), choose (1, 10), choose (20, 40)] :: Gen Float
 
 genDistVel :: Gen (Float, Float)
 genDistVel = distGen >>= f
   where f n = return (n, (1 / (sqrt $ abs n)) :: Float)
 
-rP :: Gen (Float, Float, Float, Float)
+rP :: Gen (Float, Float, Float, Float, Float, Float)
 rP = do
-  (dist, vel) <- genDistVel
+  (dx, vx) <- genDistVel
+  (dy, vy) <- genDistVel
   mass <- massGen
   d' <- distGen
-  return (mass, dist, vel, d')
+  return (mass, dx, dy, vx, vy, d')
 
-rPs :: Int -> Gen [(Float, Float, Float, Float)]
+rPs :: Int -> Gen [(Float, Float, Float, Float, Float, Float)]
 rPs n = vectorOf n rP
 
 bs n = rPs n >>=
-  (\ ps -> return $ map (\ (m, d, v, y) -> B (earthM * m)
-                                             (P (earthD * d) 1)
-                                             (V 0 (earthV * v))
+  (\ ps -> return $ map (\ (m, dx, dy, vx, vy, y) -> B (earthM * m)
+                                             (P (earthD * dx) (earthD * dy))
+                                             (V (earthV * vx) (earthV * vy))
                                              G.azure
                                              []) ps)
 
@@ -37,16 +38,18 @@ crazyU n = bs n >>=
   (\ ps ->
     return $ U ((125 * 0.1) / 152098232.0e3)
                 13.97e27
-                2000
-                (jupiter:sun:ps)
-                (makeBarnes 20e12 (jupiter:sun:ps))
+                1000
+                (jupiter:massiveSun:sun:sun':ps)
+                (makeBarnes 20e12 (jupiter:massiveSun:sun:sun':ps))
                 False)
   where jupiter = planets !! 5
 
-sun      = B 1.9891e30 (P (-1) (-1)) (V 0 0) G.yellow []
-earthM   = 5.9736e24
-earthD   = 152098232.0e3
-earthV   =  29.78e3
+sun        = B 1.9891e30 (P (-1) (-1)) (V 0 0) G.yellow []
+sun'       = B 1.9891e32 (P 1 4.5e12) (V 1.0e05 0) G.yellow []
+massiveSun = B 1.9891e32 (P 1 (-4.5e12)) (V 0 (-1.0e05)) G.yellow []
+earthM     = 5.9736e24
+earthD     = 152098232.0e3
+earthV     = 29.78e3
 masses =
   map (* earthM)
     [0.0553, 0.815, 0.0123, 1.0, 0.107, 317.8, 95.2, 14.5, 17.1, 0.0025]
