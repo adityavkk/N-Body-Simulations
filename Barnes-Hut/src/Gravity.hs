@@ -2,13 +2,15 @@ module Gravity where
 
 import DataTypes
 import Utils
+import Constants
+import GHC.Float
 import BarnesHut hiding (insert)
 import qualified Graphics.Gloss as G
 
 type DT   = Float
 type Time = Float
 
-theta = 0.2
+theta = 0.1
 
 sd :: BarnesTree -> Body -> Float
 sd = undefined
@@ -33,8 +35,8 @@ f (B m1 p1@(P x1 y1) _ _ _) (B m2 p2@(P x2 y2) _ _ _)
   | dist <= e = A 0 0
   | otherwise = A gFx gFy
   where dist   = d p1 p2
-        gConst = 6.674286e-11
-        e      = 1.0e-3
+        gConst = 1.0
+        e      = 1.0e-5
         gF     = gConst * m2 / dist^2
         gFx    = gF * (dx / dist)
         gFy    = gF * (dy / dist)
@@ -53,8 +55,10 @@ moveBody tail (B m (P x y) v@(V vx vy) c t) dt
   | otherwise = B m (P (x + dt * vx) (y + dt * vy)) v c []
 
 moveUniv :: Float -> Universe -> Universe
-moveUniv t u@(U _ _ t' bs bt tls) = u { bodies     = bs'
-                                      , barnesTree = bt'}
-    where dt = t * t'
-          bs' = [moveBody tls (accelBody b dt (force b bt)) dt | b <- bs]
-          bt' = makeBarnes 7e12 bs'
+moveUniv t u@(U _ _ t' m bs bt w tls) = u { bodies     = bs'
+                                          , barnesTree = bt'}
+    where dt   = double2Float $ float2Double t / (sqrt (w'^3 / (mTot * gConst))) * 2.0e5
+          bs'  = [moveBody tls (accelBody b dt (force b bt)) dt | b <- bs]
+          bt'  = makeBarnes 7e12 bs'
+          w'   = float2Double w
+          mTot = float2Double m

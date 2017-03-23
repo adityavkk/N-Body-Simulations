@@ -29,8 +29,10 @@ data Body = B { mass  :: !Mass
 data Universe = U { pixelToM     :: Float
                   , pixelToKg    :: !Float
                   , simTimeRatio :: !Float
+                  , massSi       :: !Float
                   , bodies       :: ![Body]
                   , barnesTree   :: !BarnesTree
+                  , width        :: Float
                   , trails       :: !Bool
                   } deriving (Show, Eq)
 
@@ -69,4 +71,3 @@ instance Show BarnesTree where
   show (Inter (P cmx cmy) (P cm cy) w m q1 q2 q3 q4) =
     "Inter Node: ------>" ++ show (cmx, cmy) ++ " center: " ++ show (cm, cy) ++ " w: " ++ show w
     ++ " m: " ++ show m ++ "\n(Quadrants: ~~> \n" ++ show q1 ++ show q2 ++ show q3 ++ show q4 ++ ")\n"
-

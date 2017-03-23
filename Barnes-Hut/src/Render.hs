@@ -5,6 +5,9 @@ import Graphics.Gloss
 import Graphics.Gloss.Interface.Pure.Game
 import Gravity
 import Bodies
+import Constants
+import GalaxyModels
+import Utils
 import Test.QuickCheck
 
 type PixToKg = Float
@@ -12,10 +15,10 @@ type PixToMeter = Float
 
 w   = 1500
 off = 100
-fps = 80 :: Int
+fps = 60 :: Int
 
 initState :: T.Universe -> T.Rendering
-initState u = T.Render u False False False
+initState u = T.Render u False False True
 
 handleKeys :: Event -> T.Rendering -> T.Rendering
 handleKeys (EventKey (Char 't') Down _ _) r =
@@ -47,9 +50,9 @@ draw u pToM pToKg (T.B m (T.P px py) _ c t) = pictures [circle, trail]
 move :: Float -> T.Rendering -> T.Rendering
 move t r
   | zoomOut && not paused =
-    r { T.universe = moveU { T.pixelToM = T.pixelToM moveU * 0.99 }}
+    r { T.universe = moveU { T.pixelToM = T.pixelToM moveU * 0.90 }}
   | zoomIn && not paused  =
-    r { T.universe = moveU { T.pixelToM = T.pixelToM moveU * 1.01 }}
+    r { T.universe = moveU { T.pixelToM = T.pixelToM moveU * 1.10 }}
   | zoomOut               =
     r { T.universe = u { T.pixelToM = T.pixelToM u * 0.99 }}
   | zoomIn                =
@@ -59,7 +62,7 @@ move t r
   where u       = T.universe r
         zoomOut = T.zOut r
         zoomIn  = T.zIn r
-        moveU   = moveUniv (T.simTimeRatio u * t) u
+        moveU   = moveUniv t u
         paused  = T.paused r
 
 update :: b -> Float -> T.Rendering -> T.Rendering
@@ -71,5 +74,6 @@ window =
 
 simulate :: IO ()
 simulate = do
-  rendering <- generate (initState <$> crazyU 30)
+  rendering <- generate (initState <$> (plummerSphere 100 (100 * solarMassF) (1.0e20)))
+  {- rendering <- generate (initState <$> (return (siToHenon fourBodyStar))) -}
   play window black fps rendering render handleKeys move
