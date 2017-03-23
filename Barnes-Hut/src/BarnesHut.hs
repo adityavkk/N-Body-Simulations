@@ -4,7 +4,7 @@ import GHC.Float
 import DataTypes
 
 cm :: Body -> (Mass, Pos) -> Pos
-cm (B m1 (P x1 y1) _ _ t) (m2, P x2 y2) = P x y
+cm (B m1 (P x1 y1) _ _ t _) (m2, P x2 y2) = P x y
   where [m1', x1', y1', m2', x2', y2'] = map float2Double [m1, x1, y1, m2, x2, y2]
         m = m1' + m2'
         x = double2Float $ (x1' * m1' + x2' * m2') / m
@@ -44,7 +44,7 @@ insert b (Inter cMass c w m nw ne sw se) = Inter cMass' c w m' nw' ne' sw' se'
       | otherwise   = bt : bts
 
 inQuad :: Body -> BarnesTree -> Bool
-inQuad (B _ (P x y) _ _ _) bt = case bt of
+inQuad (B _ (P x y) _ _ _ _) bt = case bt of
                                 (Exter (Leaf (P x' y') w))       ->
                                   inRange x y x' y' w
                                 (Exter (Node _ (P x' y') w _ _)) ->

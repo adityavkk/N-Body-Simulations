@@ -5,6 +5,7 @@ import Graphics.Gloss
 import Graphics.Gloss.Interface.Pure.Game
 import Gravity
 import Bodies
+import Data.Maybe
 
 type PixToKg = Float
 type PixToMeter = Float
@@ -13,8 +14,8 @@ w   = 1500
 off = 100
 fps = 80 :: Int
 
-initState :: T.Rendering
-initState = T.Render fourBodyStar False False False False False
+initState :: T.Universe -> T.Rendering
+initState u = T.Render u False False False False False
 
 handleKeys :: Event -> T.Rendering -> T.Rendering
 handleKeys (EventKey (Char 't') Down _ _) r =
@@ -34,6 +35,14 @@ handleKeys (EventKey (Char 'f') s _ _) r
 handleKeys (EventKey (Char 's') s _ _) r
   | s == Down = r { T.slow = True  }
   | otherwise = r { T.slow = False }
+handleKeys (EventKey (Char '1') Down _ _) r =
+  r { T.universe = binaryStars }
+handleKeys (EventKey (Char '2') Down _ _) r =
+  r { T.universe = threeBodyCircle }
+handleKeys (EventKey (Char '3') Down _ _) r =
+  r { T.universe = fourBodyStar }
+handleKeys (EventKey (Char '4') Down _ _) r =
+  r { T.universe = solarSystem }
 handleKeys _ r                              = r
 
 render :: T.Rendering -> Picture
@@ -44,9 +53,11 @@ render r = pictures $ draw u pToM pToKg <$> bs
         pToKg = T.pixelToKg u
 
 draw :: T.Universe -> PixToMeter -> PixToKg -> T.Body -> Picture
-draw u pToM pToKg (T.B m (T.P px py) _ c t) = pictures [circle, trail]
+draw u pToM pToKg (T.B m (T.P px py) _ c s t) = pictures [circle, trail]
   where
-    circle   = translate (pToM * px) ( pToM * py ) $ color c $ circleSolid 4
+    circle   = if isNothing s
+               then translate (pToM * px) ( pToM * py ) $ color c $ circleSolid 10
+               else translate (pToM * px) ( pToM * py ) $ color c $ circleSolid (pToKg * fromJust s)
     trail    = color c $ line [(pToM * x, pToM * y) | (x, y) <- t]
 
 move :: Float -> T.Rendering -> T.Rendering
@@ -81,4 +92,4 @@ window =
   InWindow "N-Body Simulation (Barnes Hut) by Aditya K." (w, w) (off, off)
 
 simulate :: IO ()
-simulate = play window black fps initState render handleKeys move
+simulate = play window black fps (initState binaryStars) render handleKeys move
