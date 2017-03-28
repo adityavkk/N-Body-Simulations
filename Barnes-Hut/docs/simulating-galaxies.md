@@ -74,7 +74,7 @@ Provides a general equation that relates the average kinectic energy over time o
 
 ---
 
-![](https://github.com/adityavkk/N-Body-Simulations/blob/demo/Barnes-Hut/docs/kuzmin_hot_xy.gif?raw=true)
+![](./kuzmin_hot_xy.gif)
 
 ---
 
@@ -83,11 +83,11 @@ Provides a general equation that relates the average kinectic energy over time o
 
 ---
 
-![](https://github.com/adityavkk/N-Body-Simulations/blob/demo/Barnes-Hut/docs/MW_SpiralDance-XY.gif?raw=true)
+![](./MW_SpiralDance-XY.gif)
 
 ---
 
-![](https://github.com/adityavkk/N-Body-Simulations/blob/demo/Barnes-Hut/docs/mw_SpiralDance-yz.gif?raw=true)
+![](./mw_SpiralDance-yz.gif)
 
 ---
 
@@ -96,7 +96,7 @@ Provides a general equation that relates the average kinectic energy over time o
 
 ---
 
-![](https://github.com/adityavkk/N-Body-Simulations/blob/demo/Barnes-Hut/docs/andromeda_mw_xy.gif?raw=true)
+![](./andromeda_mw_xy.gif)
 
 ---
 

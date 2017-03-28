@@ -137,7 +137,7 @@ exerts no force
     && stack exec`
 
 ## To-Do
-- [ ] Realistic spherical and disk galaxies with Plummer, Hernquist and
+- [x] Realistic spherical and disk galaxies with Plummer, Hernquist and
 Kuzmin Models to simulate galaxy collisions
 - [ ] 3D visualization with oct tree Barnes-Hut model
 - [ ] Parallelize force calculations
