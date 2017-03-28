@@ -22,10 +22,8 @@ library
                        BarnesHut
   build-depends:       base >= 4.7 && < 5 
                      , gloss==1.10.*
-  ghc-options:        -fwarn-unused-imports
-                      -fwarn-tabs
-                      -fwarn-missing-signatures
-                      -fwarn-incomplete-patterns
+                     , QuickCheck
+                     , numeric-tools
 
 executable Barnes-Hut-Exe
   hs-source-dirs:      src
@@ -34,10 +32,8 @@ executable Barnes-Hut-Exe
   build-depends:       Barnes-Hut
                      , base >= 4.7 && < 5 
                      , gloss==1.10.*
-  ghc-options:        -fwarn-unused-imports
-                      -fwarn-tabs
-                      -fwarn-missing-signatures
-                      -fwarn-incomplete-patterns
+                     , QuickCheck
+                     , numeric-tools
 
 test-suite Barnes-Hut-Test
   type:                exitcode-stdio-1.0

@@ -5,6 +5,7 @@ module DataTypes where
 import qualified Graphics.Gloss as G
 
 type Mass   = Float
+type Radius = Float
 
 data Pos = P { px :: !Float
              , py :: !Float
@@ -22,6 +23,7 @@ data Body = B { mass  :: !Mass
               , pos   :: !Pos
               , vel   :: !Vel
               , color :: !G.Color
+              , size  :: (Maybe Float)
               , trail :: [(Float, Float)]
               } deriving (Show, Eq)
 
@@ -37,6 +39,8 @@ data Rendering = Render { universe :: Universe
                         , zOut     :: !Bool
                         , zIn      :: !Bool
                         , paused   :: !Bool
+                        , fast     :: !Bool
+                        , slow     :: !Bool
                         } deriving (Show)
 
 data BarnesLeaf = Leaf { blCenter :: !Pos
@@ -62,7 +66,7 @@ data BarnesTree = Exter !BarnesLeaf
 
 instance Show BarnesTree where
   show (Exter (Leaf (P x y) w)) = "Leaf: " ++ show x ++ " " ++ show y ++ " " ++ show w ++ "\n"
-  show (Exter (Node (P x y) (P x' y') w m (B mb (P xb yb) _ _ _))) =
+  show (Exter (Node (P x y) (P x' y') w m (B mb (P xb yb) _ _ _ _))) =
     "Exter Node: " ++ show x ++ " " ++ show y ++ " center: " ++ show x' ++ " " ++ show y' ++
     " " ++ show w ++ " " ++ show m ++ " " ++ "Body: " ++ show mb ++ " pos: " ++ show (xb, yb) ++ "\n"
   show (Inter (P cmx cmy) (P cm cy) w m q1 q2 q3 q4) =
