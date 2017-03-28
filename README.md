@@ -12,7 +12,12 @@ particle is calculated by taking every other particle into account)
 
 ---
 
-### Some 2D models simulated with Barnes-Hut
+### Models Simulated with Barnes-Hut
+![Spherical Galaxy with Plummer Model](images/sphericalGalaxyFast.gif)
+Spherical Galaxy with Plummer Model
+
+---
+
 ![Solar System](images/solarSystem.gif)
 
 Binary Star System | Three Body System
