@@ -140,7 +140,7 @@ exerts no force
 - [x] Realistic spherical and disk galaxies with Plummer, Hernquist and
 Kuzmin Models to simulate galaxy collisions
 - [ ] 3D visualization with oct tree Barnes-Hut model
-- [ ] Parallelize force calculations
+- [x] Parallelize force calculations
 - [ ] Expanded GUI for selecting initial conditions, changing constants,
 adding bodies etc.
 - [ ] Add collision handling
