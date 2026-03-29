@@ -1,6 +1,6 @@
-module Main where
+module Main (main) where
 
-import Render
+import Render (simulate)
 
 main :: IO ()
 main = simulate

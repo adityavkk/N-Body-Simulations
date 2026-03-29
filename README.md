@@ -1,20 +1,13 @@
 # N-Body Simulations
 
-Beautiful real-time gravitational N-body simulations featuring the Barnes-Hut octree algorithm, rendered with Three.js and WebGL.
+Beautiful real-time gravitational N-body simulations with two implementations:
+a **modern web app** (Three.js + TypeScript) and **native Haskell** (Gloss).
 
 ![N-Body Simulations](images/sphericalGalaxy.gif)
 
-## Features
+## Web Application (`web-sim/`)
 
-- **9 simulation presets** — Solar System, Galaxy Collision, Spiral Galaxy, Globular Cluster, Binary Stars, Figure-8, Three-Body Chaos, Lagrange Points, Pythagorean Problem
-- **Barnes-Hut octree** — O(n log n) force approximation, simulates thousands of bodies in real-time
-- **Velocity Verlet integration** — superior energy conservation over Euler methods
-- **3D visualization** — Three.js with bloom post-processing, additive blending, and particle glow effects
-- **Interactive controls** — orbit camera, zoom, speed slider, pause/resume, trail toggle
-- **Beautiful UI** — glassmorphism panel with real-time stats (FPS, body count, energy)
-- **Responsive** — works on desktop and mobile
-
-## Quick Start
+Interactive 3D simulation with a beautiful UI, 9 presets, and bloom effects.
 
 ```bash
 cd web-sim
@@ -22,66 +15,107 @@ npm install
 npm run dev
 ```
 
-Then open [http://localhost:5173](http://localhost:5173).
+**Features:**
+- 9 simulation presets (Solar System, Galaxy Collision, Spiral Galaxy, Globular Cluster, Binary Stars, Figure-8, Three-Body Chaos, Lagrange Points, Pythagorean)
+- Barnes-Hut 3D octree — O(n log n), handles 3000+ bodies in real-time
+- Velocity Verlet integration for energy conservation
+- Three.js with Unreal Bloom post-processing and additive particle blending
+- Glassmorphism UI panel with speed slider, trail toggle, real-time stats
+- Keyboard shortcuts (Space = pause, R = reset)
 
-## Simulations
+**Tech:** Vite 8 · TypeScript 6 · Three.js 0.183
 
-| Preset | Bodies | Description |
-|--------|--------|-------------|
-| Solar System | 9 | 8 planets orbiting a central star |
-| Binary Stars | 82 | Two stars with debris disks |
-| Galaxy Collision | 3002 | Two spiral galaxies merging |
-| Spiral Galaxy | 3001 | Disk galaxy with spiral arm formation |
-| Globular Cluster | 2000 | Spherical cluster with Plummer density |
-| Figure Eight | 3 | Famous periodic three-body choreography |
-| Three-Body Chaos | 3 | Chaotic gravitational dance |
-| Lagrange Points | 83 | Trojan asteroids at L4 and L5 |
-| Pythagorean Problem | 3 | 3-4-5 triangle initial conditions |
+---
+
+## Haskell: Barnes-Hut Simulation (`Barnes-Hut/`)
+
+O(n log n) quadtree-based simulation capable of 50,000+ bodies.
+
+```bash
+cd Barnes-Hut
+stack build && stack exec Barnes-Hut-Exe
+# or: cabal run Barnes-Hut-Exe
+```
+
+**Keyboard Controls:**
+
+| Key | Action |
+|-----|--------|
+| `p` | Pause/resume |
+| `t` | Toggle trails |
+| `=` / `-` | Zoom in / out |
+| `f` / `s` | Faster / slower |
+| `1`-`6` | Switch preset (binary stars, 3-body, 4-body, solar system, random galaxy, figure-8) |
+
+**Run tests:**
+```bash
+cd Barnes-Hut && stack test
+```
+
+**Tech:** GHC 9.8 (LTS 22.43) · Gloss 1.13 · QuickCheck
+
+---
+
+## Haskell: Direct Simulation (`Direct-Simulation/`)
+
+O(n²) brute-force simulation — useful for small systems and as a reference.
+
+```bash
+cd Direct-Simulation
+stack build && stack exec Direct-Simulation
+# or: cabal run Direct-Simulation
+```
+
+**Tech:** GHC 9.8 (LTS 22.43) · Gloss 1.13
+
+---
+
+## How It Works
+
+### Barnes-Hut Algorithm
+
+The Barnes-Hut algorithm recursively divides space into quadrants (2D) or octants (3D). Each node stores the center of mass and total mass of all bodies within it. For force calculation:
+
+1. If the node is far enough away (width/distance < theta), treat the entire cluster as a single point mass
+2. Otherwise, recurse into the children
+
+This reduces force calculation from O(n) to O(log n) per body.
+
+```
+force b tree
+  | isLeafWithBody  = pairwise gravitational force
+  | width/dist < θ  = approximate as point mass at center of mass
+  | otherwise       = sum forces from each quadrant
+```
+
+### Velocity Verlet Integration (Web)
+
+The web version uses the Velocity Verlet (leapfrog) integrator which is symplectic — it conserves energy over long timescales, unlike Euler integration.
+
+### Galaxy Models
+
+Galaxy initial conditions use Monte Carlo sampling of astrophysical density profiles:
+- **Plummer model** — spherical galaxies
+- **Hernquist model** — steeper core profile
+- **Kuzmin model** — disk galaxies
+
+---
 
 ## Architecture
 
 ```
-web-sim/
-├── src/
-│   ├── engine/          # Physics simulation
-│   │   ├── types.ts     # Body, SimulationConfig types
-│   │   ├── octree.ts    # Barnes-Hut octree (3D)
-│   │   └── simulation.ts # Velocity Verlet integrator
-│   ├── presets/         # Simulation presets
-│   │   ├── helpers.ts   # Body creation, sampling utilities
-│   │   └── index.ts     # All 9 preset configurations
-│   ├── renderer/        # Three.js visualization
-│   │   └── renderer.ts  # WebGL renderer with bloom
-│   ├── ui/              # User interface
-│   │   └── ui.ts        # Controls panel
-│   ├── main.ts          # Application entry point
-│   └── style.css        # Styles
-├── index.html
-├── package.json
-├── tsconfig.json
-└── vite.config.ts
+N-Body-Simulations/
+├── web-sim/                    # Modern web application
+│   ├── src/engine/             #   Physics (octree, Verlet integrator)
+│   ├── src/presets/            #   9 simulation presets
+│   ├── src/renderer/           #   Three.js + bloom post-processing
+│   └── src/ui/                 #   Controls panel
+├── Barnes-Hut/                 # Haskell Barnes-Hut (O(n log n))
+│   ├── src/                    #   BarnesHut, Gravity, Bodies, GalaxyModels
+│   └── test/                   #   HSpec + QuickCheck test suite
+└── Direct-Simulation/          # Haskell direct-sum (O(n²))
+    └── src/                    #   Main, Gravity, SolarSystem
 ```
-
-## Tech Stack
-
-- **TypeScript** — strict mode, modern ES2022 target
-- **Three.js** — 3D rendering with WebGL
-- **Vite** — instant dev server and optimized builds
-- **Barnes-Hut Algorithm** — O(n log n) gravitational force approximation
-- **Velocity Verlet** — symplectic integrator for accurate orbital mechanics
-
-## Controls
-
-| Input | Action |
-|-------|--------|
-| Drag | Orbit camera |
-| Scroll | Zoom in/out |
-| Space | Pause/resume |
-| R | Reset simulation |
-
-## Legacy Haskell Implementations
-
-The original Haskell implementations are preserved in `Direct-Simulation/` (O(n²)) and `Barnes-Hut/` (O(n log n) quadtree).
 
 ## License
 

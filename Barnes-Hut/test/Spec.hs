@@ -1,8 +1,11 @@
+module Main (main) where
+
 import Test.Hspec
 
-main :: IO ()
-main = hspec test
+import qualified BarnesHutSpec
+import qualified GravitySpec
 
-test = describe "testing" $
-  it "tests" $
-    1 `shouldBe` 1
+main :: IO ()
+main = hspec $ do
+  BarnesHutSpec.spec
+  GravitySpec.spec

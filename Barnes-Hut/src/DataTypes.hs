@@ -23,11 +23,11 @@ data Body = B { mass  :: !Mass
               , pos   :: !Pos
               , vel   :: !Vel
               , color :: !G.Color
-              , size  :: (Maybe Float)
-              , trail :: [(Float, Float)]
+              , size  :: !(Maybe Float)
+              , trail :: ![(Float, Float)]
               } deriving (Show, Eq)
 
-data Universe = U { pixelToM     :: Float
+data Universe = U { pixelToM     :: !Float
                   , pixelToKg    :: !Float
                   , simTimeRatio :: !Float
                   , bodies       :: ![Body]
@@ -35,7 +35,7 @@ data Universe = U { pixelToM     :: Float
                   , trails       :: !Bool
                   } deriving (Show, Eq)
 
-data Rendering = Render { universe :: Universe
+data Rendering = Render { universe :: !Universe
                         , zOut     :: !Bool
                         , zIn      :: !Bool
                         , paused   :: !Bool
@@ -65,11 +65,15 @@ data BarnesTree = Exter !BarnesLeaf
                         } deriving (Eq)
 
 instance Show BarnesTree where
-  show (Exter (Leaf (P x y) w)) = "Leaf: " ++ show x ++ " " ++ show y ++ " " ++ show w ++ "\n"
+  show (Exter (Leaf (P x y) w)) =
+    "Leaf: " ++ show x ++ " " ++ show y ++ " " ++ show w ++ "\n"
   show (Exter (Node (P x y) (P x' y') w m (B mb (P xb yb) _ _ _ _))) =
-    "Exter Node: " ++ show x ++ " " ++ show y ++ " center: " ++ show x' ++ " " ++ show y' ++
-    " " ++ show w ++ " " ++ show m ++ " " ++ "Body: " ++ show mb ++ " pos: " ++ show (xb, yb) ++ "\n"
+    "Exter Node: " ++ show x ++ " " ++ show y
+    ++ " center: " ++ show x' ++ " " ++ show y'
+    ++ " " ++ show w ++ " " ++ show m
+    ++ " Body: " ++ show mb ++ " pos: " ++ show (xb, yb) ++ "\n"
   show (Inter (P cmx cmy) (P cm cy) w m q1 q2 q3 q4) =
-    "Inter Node: ------>" ++ show (cmx, cmy) ++ " center: " ++ show (cm, cy) ++ " w: " ++ show w
-    ++ " m: " ++ show m ++ "\n(Quadrants: ~~> \n" ++ show q1 ++ show q2 ++ show q3 ++ show q4 ++ ")\n"
-
+    "Inter Node: ------>" ++ show (cmx, cmy)
+    ++ " center: " ++ show (cm, cy) ++ " w: " ++ show w
+    ++ " m: " ++ show m ++ "\n(Quadrants: ~~> \n"
+    ++ show q1 ++ show q2 ++ show q3 ++ show q4 ++ ")\n"
