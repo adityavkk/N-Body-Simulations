@@ -3,7 +3,7 @@
 Beautiful real-time gravitational N-body simulations with two implementations:
 a **modern web app** (Three.js + TypeScript) and **native Haskell** (Gloss).
 
-![N-Body Simulations](images/sphericalGalaxy.gif)
+![N-Body Simulation UI](images/ui-screenshot.png)
 
 ## Web Application (`web-sim/`)
 
@@ -15,13 +15,38 @@ npm install
 npm run dev
 ```
 
-**Features:**
-- 9 simulation presets (Solar System, Galaxy Collision, Spiral Galaxy, Globular Cluster, Binary Stars, Figure-8, Three-Body Chaos, Lagrange Points, Pythagorean)
-- Barnes-Hut 3D octree — O(n log n), handles 3000+ bodies in real-time
-- Velocity Verlet integration for energy conservation
-- Three.js with Unreal Bloom post-processing and additive particle blending
-- Glassmorphism UI panel with speed slider, trail toggle, real-time stats
-- Keyboard shortcuts (Space = pause, R = reset)
+### Simulations
+
+**Solar System** — 8 planets orbiting a central star with trails
+![Solar System](images/solar-system.png)
+
+**Binary Stars** — Two stars with debris disks orbiting their common center of mass
+![Binary Stars](images/binary-stars.png)
+
+**Galaxy Collision** — 3,000 stars across two merging galaxies
+![Galaxy Collision](images/galaxy-collision.png)
+
+**Spiral Galaxy** — 3,000-star disk galaxy with spiral arm formation
+![Spiral Galaxy](images/disk-galaxy.png)
+
+**Globular Cluster** — 2,000 stars with Plummer density profile
+![Globular Cluster](images/globular-cluster.png)
+
+**Figure Eight** — Famous periodic three-body choreography
+![Figure Eight](images/figure-eight.png)
+
+Three-Body Chaos | Lagrange Points | Pythagorean Problem
+:-:|:-:|:-:
+![Three-Body Chaos](images/three-body-chaos.png) | ![Lagrange Points](images/lagrange-points.png) | ![Pythagorean Problem](images/pythagorean.png)
+
+### Features
+
+- **Barnes-Hut 3D octree** — O(n log n) force approximation, handles 3000+ bodies in real-time
+- **Velocity Verlet integration** — symplectic integrator for energy conservation
+- **Three.js** with Unreal Bloom post-processing and additive particle blending
+- **Glassmorphism UI** with speed slider, trail toggle, real-time stats (FPS, energy, body count)
+- **Keyboard shortcuts** — Space to pause, R to reset
+- **Mouse controls** — drag to orbit, scroll to zoom
 
 **Tech:** Vite 8 · TypeScript 6 · Three.js 0.183
 
@@ -80,13 +105,6 @@ The Barnes-Hut algorithm recursively divides space into quadrants (2D) or octant
 2. Otherwise, recurse into the children
 
 This reduces force calculation from O(n) to O(log n) per body.
-
-```
-force b tree
-  | isLeafWithBody  = pairwise gravitational force
-  | width/dist < θ  = approximate as point mass at center of mass
-  | otherwise       = sum forces from each quadrant
-```
 
 ### Velocity Verlet Integration (Web)
 
