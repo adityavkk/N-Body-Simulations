@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>N-Body Simulations — Gravitational Physics</title>
+  <meta name="description" content="Beautiful real-time N-body gravitational simulations using Barnes-Hut octree algorithm with Three.js"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <div id="loading">
+    <div class="loading-title">N-Body</div>
+    <div class="loading-spinner"></div>
+  </div>
+  <canvas id="canvas"></canvas>
+  <div id="ui-panel"></div>
+  <script type="module" src="/src/main.ts"></script>
+  <script>
+    // Hide loading screen once Three.js initializes
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const el = document.getElementById('loading');
+        if (el) {
+          el.classList.add('fade-out');
+          setTimeout(() => el.remove(), 800);
+        }
+      }, 500);
+    });
+  </script>
+</body>
+</html>
