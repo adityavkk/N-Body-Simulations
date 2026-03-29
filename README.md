@@ -5,6 +5,10 @@ a **modern web app** (Three.js + TypeScript) and **native Haskell** (Gloss).
 
 ![N-Body Simulation UI](images/ui-screenshot.png)
 
+### Demo Video
+
+https://github.com/adityavkk/N-Body-Simulations/raw/claude/upgrade-and-modernize-gd6bM/images/demo.webm
+
 ## Web Application (`web-sim/`)
 
 Interactive 3D simulation with a beautiful UI, 9 presets, and bloom effects.
